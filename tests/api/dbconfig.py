@@ -1,7 +1,7 @@
 from __future__ import unicode_literals, print_function
 import boto3
 import os
-from moto import mock_dynamodb2
+from moto import mock_dynamodb
 
 
 def init():

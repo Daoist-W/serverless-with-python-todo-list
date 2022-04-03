@@ -10,6 +10,7 @@ import logging
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
+
 def handler(event, context):
     ''' The get handler '''
     table_name = os.getenv('TODO_TABLE',
@@ -26,7 +27,7 @@ def handler(event, context):
     todo_id = None
     
     try:
-        event['queryStringParameters']['id']
+        todo_id = event['queryStringParameters']['id']
     except:
         pass
 
