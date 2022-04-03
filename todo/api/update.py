@@ -61,7 +61,7 @@ def update(client, user_id, data, table_name):
 
     table = client.Table(table_name)
 
-    result = table.update_item(
+    table.update_item(
         ReturnValues='UPDATED_NEW',
         ExpressionAttributeNames=ex_attr_name,
         ExpressionAttributeValues=ex_attr_value,
@@ -71,4 +71,7 @@ def update(client, user_id, data, table_name):
         },
         UpdateExpression='SET {}'.format(', '.join(update_exp_lst)))
 
-    return result.get('Attributes', {})
+    result = table.get_item(Key={'userId': user_id, 'todoId': data['todoId']})['Item']
+
+    return result
+

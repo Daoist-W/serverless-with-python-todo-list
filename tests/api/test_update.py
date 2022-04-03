@@ -6,7 +6,7 @@ import os
 import uuid
 import json
 from os.path import dirname, join
-from moto import mock_dynamodb2
+from moto import mock_dynamodb
 
 from todo.api.create import create
 from todo.api.update import update, handler
@@ -15,7 +15,7 @@ from dbconfig import init
 
 
 class TestUpdateAPI(unittest.TestCase):
-    @mock_dynamodb2
+    @mock_dynamodb
     def test_update_function(self):
         client, table = init()
         item = {'item': 'I need to finish this test!', 'completed': True}
@@ -31,7 +31,7 @@ class TestUpdateAPI(unittest.TestCase):
         assert not todo_from_get['completed']
         assert todo_from_get['item'] == 'Make all the tests!'
 
-    @mock_dynamodb2
+    @mock_dynamodb
     def test_update_handler(self):
         client, table = init()
 
@@ -54,7 +54,8 @@ class TestUpdateAPI(unittest.TestCase):
 
         # make a change to the item
         todo['item'] = todo['item'] + '!!'
-        # Set the body to the todo item.
+
+        # Set the body to the to-do item.
         event['body'] = json.dumps(todo)
 
         results = handler(event, {})
@@ -66,6 +67,7 @@ class TestUpdateAPI(unittest.TestCase):
         # Verify the contents of the body
         assert 'body' in results
         body = json.loads(results['body'])
+
         # Verify that the UUIDs were set
         assert body['userId'] == '1'
         assert body['todoId'] and len(body['todoId']) == 36
