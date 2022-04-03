@@ -18,5 +18,7 @@ def respond(err, res=None):
         },
     }
 
+
 def parse_username_from_claims(event):
     return event['requestContext']['authorizer']['claims']['cognito:username']
+    

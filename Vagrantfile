@@ -56,54 +56,55 @@ Vagrant.configure("2") do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  config.vm.provision "shell", inline: <<-SHELL
-    add-apt-repository ppa:jonathonf/python-3.6 --yes
-    apt-get update
-    apt-get install -y python3.6 python3.6-dev libssl-dev 
-    apt-get install -y python3-pip virtualenv zip
+  # config.vm.provision "shell", inline: <<-SHELL
+  #   add-apt-repository ppa:jonathonf/python-3.6 --yes
+  #   apt-get update
+  #   apt-get install -y python3.6 python3.6-dev libssl-dev 
+  #   apt-get install -y python3-pip virtualenv zip
     
 
-    # In case the dir isn't there already, which is unlikey since it's a bound dir.
-    mkdir -p /app_files
-    cd /app_files
-    virtualenv -p /usr/bin/python3.6 venv
+  #   # In case the dir isn't there already, which is unlikey since it's a bound dir.
+  #   mkdir -p /app_files
+  #   cd /app_files
+  #   virtualenv -p /usr/bin/python3.6 venv
    
-    source /app_files/venv/bin/activate
+  #   source /app_files/venv/bin/activate
     
-    pip install moto
-    pip install moto[server]    
-    pip install -r requirements.txt
+  #   pip install moto
+  #   pip install moto[server]    
+  #   pip install -r requirements.txt
 
-    # New and untested
-    source /app_files/venv/bin/activate
-    pip install awscli
-    # link the creds file to the VM
-    mkdir -p /home/ubuntu/.aws
-    ln -s /app_files/credentials /home/ubuntu/.aws/
+  #   # New and untested
+  #   source /app_files/venv/bin/activate
+  #   pip install awscli
+  #   # link the creds file to the VM
+  #   mkdir -p /home/ubuntu/.aws
+  #   ln -s /app_files/credentials /home/ubuntu/.aws/
     
-    # activate the venv on login.
-    # this will append for each provision, however it shouldn't be too problematic
-    echo "source /app_files/venv/bin/activate" | sudo tee -a /etc/profile
+  #   # activate the venv on login.
+  #   # this will append for each provision, however it shouldn't be too problematic
+  #   echo "source /app_files/venv/bin/activate" | sudo tee -a /etc/profile
     
-    grep -q -F 'PYTHONPATH="/app_files:$PYTHONPATH"' /etc/environment || echo 'PYTHONPATH="/app_files:$PYTHONPATH"' | sudo tee -a /etc/environment
+  #   grep -q -F 'PYTHONPATH="/app_files:$PYTHONPATH"' /etc/environment || echo 'PYTHONPATH="/app_files:$PYTHONPATH"' | sudo tee -a /etc/environment
     
-    # Install SAM local. 
-    # Doing it manually since there's an issue with the NPM install as of Sept. 1, 2017
-    cd ~
-    # wget https://github.com/awslabs/aws-sam-local/releases/download/v0.2.0/sam_0.2.0_linux_amd64.deb
-    # dpkg -i sam_0.2.0_linux_amd64.deb
+  #   # Install SAM local. 
+  #   # Doing it manually since there's an issue with the NPM install as of Sept. 1, 2017
+  #   cd ~
+  #   # wget https://github.com/awslabs/aws-sam-local/releases/download/v0.2.0/sam_0.2.0_linux_amd64.deb
+  #   # dpkg -i sam_0.2.0_linux_amd64.deb
     
-    wget https://github.com/awslabs/aws-sam-local/releases/download/v0.2.2/sam_0.2.2_linux_amd64.deb
-    dpkg -i sam_0.2.2_linux_amd64.deb
+  #   wget https://github.com/awslabs/aws-sam-local/releases/download/v0.2.2/sam_0.2.2_linux_amd64.deb
+  #   dpkg -i sam_0.2.2_linux_amd64.deb
     
-    apt-get -f install
+  #   apt-get -f install
 
-    # SAM Local uses docker...so let's install it...
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-    apt-get update
-    apt-cache policy docker-ce
-    apt-get install -y docker-ce
+  #   # SAM Local uses docker...so let's install it...
+  #   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  #   add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  #   apt-get update
+  #   apt-cache policy docker-ce
+  #   apt-get install -y docker-ce
     
-  SHELL
+  # SHELL
+  
 end

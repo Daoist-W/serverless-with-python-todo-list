@@ -2,11 +2,11 @@ import os
 import json
 import uuid
 import datetime
-import boto3
+import boto3 # NOTE: official python library for AWS, has functionality for interacting with all AWS 
 from .helper import respond, parse_username_from_claims
 
 
-def handler(event, context):
+def handler(event, context): # NOTE: Lambda will be calling this, this is basically the access point for CREATE
     data = None
 
     try:
@@ -17,7 +17,7 @@ def handler(event, context):
     # Make sure users don't add more properties than they should
     # A whitelist will ensure that any property non in this list is removed
     whitelist = ['completed', 'item']
-    table_name = os.getenv('TODO_TABLE',
+    table_name = os.getenv('TODO_TABLE', # NOTE: using environment variables is => better security practice
                            'todo_test')  # Table from env vars or todo_test
     region_name = os.getenv('AWS_REGION',
                             'us-east-1')  # Region from env vars or east 1
@@ -30,7 +30,7 @@ def handler(event, context):
     user_id = parse_username_from_claims(event)
     result = create(client, user_id, data, table_name, whitelist)
 
-    return respond(None, result)
+    return respond(None, result) # NOTE: will be sent back to user through API gateway 
 
 
 def create(client, user_id, data, table_name, whitelist):
@@ -43,7 +43,7 @@ def create(client, user_id, data, table_name, whitelist):
     if 'item' not in data:
         raise ValueError('The todo item is missing from the data dictionary.')
 
-    table = client.Table(table_name)
+    table = client.Table(table_name) # NOTE: facilitates connection to the database table we need
     # Create a new dict that contains just whitelisted properties.
     whitelisted_data = {k: v for k, v in data.items() if k in whitelist}
 
@@ -57,6 +57,6 @@ def create(client, user_id, data, table_name, whitelist):
     if 'completed' not in whitelisted_data:
         whitelisted_data['completed'] = False
 
-    table.put_item(Item=whitelisted_data)
+    table.put_item(Item=whitelisted_data) # NOTE: this is literally handling the saving to dynamodb part
 
     return whitelisted_data

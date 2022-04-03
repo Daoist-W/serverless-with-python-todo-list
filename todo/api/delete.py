@@ -21,11 +21,11 @@ def handler(event, context):
     # Assume all users are malicious haxors looking to 'pwn all ur nodes'
     user_id = parse_username_from_claims(event)
     todo_id = None
-    
+
     try:
-        event['queryStringParameters']['id']
+        todo_id = event['queryStringParameters']['id']
     except:
-        return respond('Missing the todo item id', None)        
+        return respond('Missing the todo item id', None)
 
     delete(client, user_id, todo_id, table_name)
 
